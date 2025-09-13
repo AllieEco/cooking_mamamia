@@ -1,0 +1,464 @@
+﻿/* Variables CSS */
+:root {
+    --primary-color: #c2410c; /* Orange/Rouge Brique */
+    --primary-hover: #9a3412; /* Plus foncé pour le survol */
+    --success-color: #10b981;
+    --error-color: #ef4444;
+    --warning-color: #f59e0b;
+    --border-color: #e5e7eb;
+    --text-color: #374151;
+    --text-light: #6b7280;
+    --bg-color: #f9fafb;
+    --white: #ffffff;
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --border-radius: 0.5rem;
+    --transition: all 0.2s ease-in-out;
+}
+
+/* Reset et base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('assets/fond.jpg');
+    background-repeat: repeat;
+    filter: blur(2.5px);
+    z-index: -1;
+    opacity: 0.5;
+    transform: scale(1.1);
+    animation: scrollBackground 120s linear infinite;
+}
+
+/* Layout principal */
+header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    color: var(--white);
+    text-align: center;
+    padding: 2rem 1rem;
+    box-shadow: var(--shadow);
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* Sections */
+.form-section, .inventory-section {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.form-section h2, .inventory-section h2 {
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Formulaire */
+.form-ajout {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-group label {
+    font-weight: 500;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.input-group input,
+.input-group select {
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+    background: var(--white);
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.input-group input:invalid {
+    border-color: var(--error-color);
+}
+
+/* Boutons */
+.btn-primary {
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 0.875rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: var(--white);
+    color: var(--text-color);
+    border: 2px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-secondary:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-danger {
+    background: var(--error-color);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+.btn-success {
+    background: var(--success-color);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-success:hover {
+    background: #059669;
+}
+
+/* Messages */
+.message {
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    font-weight: 500;
+    animation: slideIn 0.3s ease-out;
+}
+
+.message.success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.message.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.message.warning {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+/* Liste des ingrédients */
+.liste-ingredients {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.ingredient-card {
+    background: var(--white);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    transition: var(--transition);
+    position: relative;
+}
+
+.ingredient-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow);
+}
+
+.ingredient-card.editing {
+    border-color: var(--warning-color);
+    background: #fffbeb;
+}
+
+.ingredient-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.ingredient-details h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 0.25rem;
+}
+
+.ingredient-details p {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.ingredient-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.ingredient-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.ingredient-form .form-row {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+}
+
+.ingredient-form .input-group {
+    flex: 1;
+}
+
+.ingredient-form .form-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+/* État vide */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-light);
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+/* Footer */
+footer {
+    background: var(--text-color);
+    color: var(--white);
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+footer p {
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+/* Utilitaires */
+.hidden {
+    display: none !important;
+}
+
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.ingredient-card {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes scrollBackground {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+/* Responsive Design - Mobile First */
+@media (min-width: 768px) {
+    header h1 {
+        font-size: 3rem;
+    }
+    
+    main {
+        padding: 3rem 2rem;
+    }
+    
+    .form-ajout {
+        flex-direction: row;
+        align-items: end;
+        gap: 1rem;
+    }
+    
+    .input-group {
+        flex: 1;
+    }
+    
+    .ingredient-info {
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    .ingredient-form .form-row {
+        flex-direction: row;
+    }
+    
+    .ingredient-form .form-actions {
+        justify-content: flex-end;
+    }
+}
+
+@media (min-width: 1024px) {
+    .liste-ingredients {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .ingredient-card {
+        padding: 2rem;
+    }
+}
+
+/* États de focus et accessibilité */
+.btn-primary:focus,
+.btn-secondary:focus,
+.btn-danger:focus,
+.btn-success:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+input:focus,
+select:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Mode sombre (optionnel) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-color: #f3f4f6;
+        --text-light: #9ca3af;
+        --bg-color: #111827;
+        --white: #1f2937;
+        --border-color: #374151;
+    }
+    
+    body {
+        background-color: var(--bg-color);
+    }
+    
+    .form-section, .inventory-section {
+        background: var(--white);
+        border: 1px solid var(--border-color);
+    }
+}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Prep - Planificateur de Repas</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mealprep.css">
+</head>
+<body>
+    <header>
+        <h1>🍲 Meal Prep</h1>
+        <p>Planifiez vos préparations culinaires de la semaine</p>
+    </header>
+
+    <nav class="navigation">
+        <a href="index.html">🍽️ Mon Placard</a>
+        <a href="mealprep.html" class="active">🍲 Meal Prep</a>
+        <!-- Liens futurs
+        <a href="menu.html">Menu Semaine</a>
+        <a href="courses.html">Liste Courses</a>
+        -->
+    </nav>
+
+    <main>
+        <section class="form-section creation-recette">
+            <h2>Créer une recette</h2>
+            <form id="form-recette">
+                <div class="input-group">
+                    <label for="nom-recette">Nom de la recette</label>
+                    <input type="text" id="nom-recette" placeholder="Ex: Curry de légumes" required>
+                </div>
+                <div class="input-group">
+                    <label for="nb-portions">Nombre de portions</label>
+                    <input type="number" id="nb-portions" placeholder="4" min="1" required>
+                </div>
+                
+                <div class="ingredients-recette">
+                    <h3>Ingrédients nécessaires</h3>
+                    <div id="liste-ingredients-recette">
+                        <!-- Ingrédients ajoutés dynamiquement ici -->
+                    </div>
+
+                    <!-- Formulaire pour ingrédient du placard (visible par défaut) -->
+                    <div id="form-ingredient-placard" class="ajouter-ingredient">
+                        <select id="select-ingredient">
+                            <option value="">Choisir un ingrédient du placard...</option>
+                        </select>
+                        <input type="number" id="quantite-ingredient-placard" placeholder="Quantité" min="0.1" step="0.1">
+                        <span id="unite-affichee"></span>
+                        <button type="button" id="btn-ajouter-ingredient-placard" class="btn-secondary">Ajouter</button>
+                        <button type="button" id="btn-passer-a-autre" class="btn-secondary-outline">Autre Ingrédient</button>
+                    </div>
+
+                    <!-- Formulaire pour autre ingrédient (caché par défaut) -->
+                    <div id="form-autre-ingredient" class="ajouter-ingredient hidden">
+                        <input type="text" id="autre-ingredient-nom" placeholder="Nom de l'ingrédient">
+                        <input type="number" id="autre-ingredient-quantite" placeholder="Quantité" min="0.1" step="0.1">
+                        <input type="text" id="autre-ingredient-unite" list="unites-communes" placeholder="Unité (g, kg, ...)">
+                        <datalist id="unites-communes">
+                            <option value="grammes"></option>
+                            <option value="kg"></option>
+                            <option value="pièces"></option>
+                            <option value="litres"></option>
+                            <option value="mL"></option>
+                            <option value="cL"></option>
+                        </datalist>
+                        <button type="button" id="btn-ajouter-autre-ingredient" class="btn-secondary">Ajouter</button>
+                        <button type="button" id="btn-retour-placard" class="btn-secondary-outline">Retour au Placard</button>
+                    </div>
+
+                    <div id="ingredient-feedback" class="feedback-message hidden"></div>
+                </div>
+                
+                <button type="submit" class="btn-primary">Créer le meal prep</button>
+            </form>
+        </section>
+
+        <section class="inventory-section mes-mealpreps">
+            <h2>Mes meal preps</h2>
+             <div id="message" class="message hidden"></div>
+            <div id="liste-mealpreps">
+                <!-- Meal preps affichés ici -->
+            </div>
+             <div id="empty-state-mealprep" class="empty-state">
+                <div class="empty-icon">🍲</div>
+                <h3>Aucun meal prep planifié</h3>
+                <p>Commencez par créer votre première recette !</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Mon Placard - Application de gestion d'inventaire alimentaire</p>
+    </footer>
+
+    <script src="mealprep.js"></script>
+</body>
+</html> 

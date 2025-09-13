@@ -1,0 +1,222 @@
+/* Styles spécifiques à la page Meal Prep */
+
+/* Navigation */
+.navigation {
+    display: flex;
+    justify-content: center;
+    background-color: var(--white);
+    padding: 0.5rem 1rem;
+    box-shadow: var(--shadow);
+    margin: -2rem auto 2rem;
+    max-width: 1200px;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    position: relative;
+    z-index: 10;
+}
+
+.navigation a {
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 500;
+    transition: var(--transition);
+    border-bottom: 3px solid transparent;
+}
+
+.navigation a:hover {
+    color: var(--primary-color);
+}
+
+.navigation a.active {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
+}
+
+.btn-secondary-outline {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-secondary-outline:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+
+/* Section Création de recette */
+.creation-recette .input-group {
+    margin-bottom: 1.5rem;
+}
+
+.ingredients-recette {
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem 0;
+    margin-bottom: 1.5rem;
+}
+
+.ingredients-recette h3 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.ajouter-ingredient {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.ajouter-ingredient select {
+    flex-grow: 2;
+    min-width: 150px;
+}
+.ajouter-ingredient input {
+    flex-grow: 1;
+    min-width: 80px;
+}
+.ajouter-ingredient span {
+    font-weight: 500;
+}
+
+/* Liste des ingrédients dans la recette */
+#liste-ingredients-recette {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.empty-list-message {
+    color: var(--text-light);
+    text-align: center;
+    margin: auto;
+    font-style: italic;
+}
+
+#liste-ingredients-recette .ingredient-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--border-color);
+}
+
+#liste-ingredients-recette .ingredient-item button {
+    background: none;
+    border: none;
+    color: var(--error-color);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.25rem;
+}
+
+/* Statuts de disponibilité des ingrédients */
+.ingredient-disponible {
+    border-left-color: var(--success-color);
+    background-color: #f0fdf4;
+}
+
+.ingredient-insuffisant {
+    border-left-color: var(--warning-color);
+    background-color: #fefce8;
+}
+
+.ingredient-manquant {
+    border-left-color: var(--error-color);
+    background-color: #fef2f2;
+}
+
+/* Section Mes Meal Preps */
+#liste-mealpreps {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.mealprep-card {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.mealprep-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.mealprep-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.mealprep-header .portions {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.mealprep-header .btn-supprimer {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-light);
+    cursor: pointer;
+}
+
+.mealprep-card .ingredients-list {
+    padding: 1rem 1.5rem;
+    flex-grow: 1;
+}
+
+.mealprep-card .ingredient-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    padding: 0.25rem 0;
+}
+.mealprep-card .ingredient-item .status-warning,
+.mealprep-card .ingredient-item .status-error {
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--warning-color);
+}
+
+.mealprep-card .date-creation {
+    padding: 0.75rem 1.5rem;
+    background: var(--bg-color);
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    border-top: 1px solid var(--border-color);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+.feedback-message {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    border-radius: var(--border-radius);
+} 

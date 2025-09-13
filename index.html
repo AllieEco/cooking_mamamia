@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Placard - Gestion d'Inventaire Alimentaire</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mealprep.css">
+</head>
+<body>
+    <header>
+        <h1>🍽️ Mon Placard</h1>
+        <p>Gérez facilement votre inventaire alimentaire personnel</p>
+    </header>
+
+    <nav class="navigation">
+        <a href="index.html" class="active">🍽️ Mon Placard</a>
+        <a href="mealprep.html">🍲 Meal Prep</a>
+        <!-- Liens futurs
+        <a href="menu.html">Menu Semaine</a>
+        <a href="courses.html">Liste Courses</a>
+        -->
+    </nav>
+
+    <main>
+        <section class="form-section">
+            <h2>Ajouter un ingrédient</h2>
+            <form id="form-ajout" class="form-ajout">
+                <div class="input-group">
+                    <label for="nom-ingredient">Nom de l'ingrédient</label>
+                    <input 
+                        type="text" 
+                        id="nom-ingredient" 
+                        placeholder="Ex: Riz basmati" 
+                        required 
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <div class="input-group">
+                    <label for="quantite">Quantité</label>
+                    <input 
+                        type="number" 
+                        id="quantite" 
+                        placeholder="500" 
+                        min="0.1" 
+                        step="0.1" 
+                        required
+                    >
+                </div>
+                
+                <div class="input-group">
+                    <label for="unite">Unité</label>
+                    <select id="unite" required>
+                        <option value="">Choisir unité</option>
+                        <option value="grammes">grammes</option>
+                        <option value="kg">kg</option>
+                        <option value="pieces">pièces</option>
+                        <option value="litres">litres</option>
+                        <option value="mL">mL</option>
+                        <option value="cL">cL</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    <span class="btn-text">Ajouter</span>
+                    <span class="btn-loading hidden">Ajout...</span>
+                </button>
+            </form>
+        </section>
+
+        <section class="inventory-section">
+            <h2>Votre inventaire</h2>
+            <div id="message" class="message hidden"></div>
+            
+            <div id="liste-ingredients" class="liste-ingredients">
+                <!-- Les ingrédients seront affichés ici dynamiquement -->
+            </div>
+            
+            <div id="empty-state" class="empty-state hidden">
+                <div class="empty-icon"></div>
+                <h3>Votre placard est vide</h3>
+                <p>Commencez par ajouter votre premier ingrédient !</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Mon Placard - Application de gestion d'inventaire alimentaire</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
