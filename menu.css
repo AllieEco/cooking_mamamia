@@ -59,6 +59,16 @@
 }
 
 /* Planning de la semaine */
+.planning-semaine {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+.planning-semaine h2 {
+    margin-bottom: 1.5rem;
+}
+
 .semaine-grid {
     display: grid;
     grid-template-columns: 1fr;

@@ -201,6 +201,8 @@ class MealPrepManager {
     }
 
     creerMealPrep() {
+        this.chargerDonneesPlacard(); // TOUJOURS commencer avec les données fraîches
+
         const nomRecette = document.getElementById('nom-recette').value.trim();
         const nbPortions = parseInt(document.getElementById('nb-portions').value);
 
@@ -211,6 +213,7 @@ class MealPrepManager {
 
         const status = this.verifierDisponibiliteIngredients(this.ingredientsRecetteCourante);
         this.mettreAJourPlacard(this.ingredientsRecetteCourante);
+        this.peuplerSelectIngredients(); // Mettre à jour le menu déroulant avec les nouvelles quantités
         
         status.insuffisants.forEach(ing => this.ajouterAListeCourses({nom: ing.nom, quantite: ing.manquant, unite: ing.unite}));
         status.manquants.forEach(ing => this.ajouterAListeCourses(ing));
@@ -233,6 +236,8 @@ class MealPrepManager {
     }
     
     mettreAJourMealPrep() {
+        this.chargerDonneesPlacard(); // TOUJOURS commencer avec les données fraîches
+
         const nomRecette = document.getElementById('nom-recette').value.trim();
         const nbPortions = parseInt(document.getElementById('nb-portions').value);
         if (!nomRecette || !nbPortions || this.ingredientsRecetteCourante.length === 0) {
@@ -254,12 +259,12 @@ class MealPrepManager {
         }
 
         this.appliquerDiffAuPlacard(ingredientsDiff);
+        this.sauvegarderPlacard(); // Correction: Sauvegarde du placard après l'avoir modifié en mémoire
 
         const index = this.mealpreps.findIndex(m => m.id === this.editingMealPrepId);
         this.mealpreps[index] = { ...mealPrepOriginal, nom: nomRecette, portions: nbPortions, ingredients: this.ingredientsRecetteCourante };
 
         this.sauvegarderMealpreps();
-        this.sauvegarderPlacard();
         this.peuplerSelectIngredients();
         this.afficherMealpreps();
         this.showMessage(`Meal prep "${nomRecette}" mis à jour ! ${messageAjouts}`, 'success');
@@ -337,8 +342,9 @@ class MealPrepManager {
     }
     
     mettreAJourPlacard(ingredientsUtilises) {
-        // Cette fonction ne sert plus que pour la création initiale
+        // Cette fonction ne sert que pour la création initiale
         this.appliquerDiffAuPlacard(ingredientsUtilises.map(ing => ({...ing, diff: ing.quantite})));
+        this.sauvegarderPlacard(); // Correction: Sauvegarde du placard après l'avoir modifié en mémoire
     }
 
     verifierDisponibiliteIngredients(ingredientsRecette) {
