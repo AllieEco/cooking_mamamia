@@ -42,11 +42,12 @@ class MenuManager {
     genererGrilleSemaine() {
         const container = document.getElementById('semaine-grid');
         container.innerHTML = '';
-        this.jours.forEach(jour => {
+        this.jours.forEach((jour, index) => {
             const jourCapitalized = jour.charAt(0).toUpperCase() + jour.slice(1);
+            const date = this.getWeekDate(index);
             container.innerHTML += `
                 <div class="jour-container">
-                    <h3 class="jour-titre">${jourCapitalized}</h3>
+                    <h3 class="jour-titre">${jourCapitalized} <span class="date-jour">${date}</span></h3>
                     <div class="repas-jour">
                         <div class="repas-slot">
                             <label>Déjeuner</label>
@@ -59,6 +60,20 @@ class MenuManager {
                     </div>
                 </div>`;
         });
+    }
+
+    getWeekDate(dayIndex) { // 0 for Monday, 6 for Sunday
+        const today = new Date();
+        const day = today.getDay();
+        const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+        const monday = new Date(new Date().setDate(diff));
+
+        const targetDate = new Date(monday);
+        targetDate.setDate(monday.getDate() + dayIndex);
+
+        const dayOfMonth = targetDate.getDate();
+        const month = targetDate.getMonth() + 1;
+        return `${dayOfMonth.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}`;
     }
 
     chargerEtiquettesMealPrep() {

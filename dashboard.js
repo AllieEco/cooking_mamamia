@@ -7,8 +7,58 @@ class DashboardManager {
     }
 
     init() {
+        this.verifierResetHebdomadaire();
         this.mettreAJourDashboard();
         this.setupEventListeners();
+    }
+
+    verifierResetHebdomadaire() {
+        const now = new Date();
+        const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+        const diffToMonday = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+        const currentMonday = new Date(new Date().setDate(diffToMonday));
+        currentMonday.setHours(0, 0, 0, 0);
+
+        const lastResetString = localStorage.getItem('lastResetMonday');
+        if (!lastResetString) {
+            localStorage.setItem('lastResetMonday', currentMonday.toISOString());
+            return;
+        }
+
+        const lastResetMonday = new Date(lastResetString);
+
+        if (currentMonday.getTime() > lastResetMonday.getTime()) {
+            console.log("Nouvelle semaine détectée, réinitialisation du planning...");
+
+            const planning = JSON.parse(localStorage.getItem('planningMenu') || '{}');
+            let mealpreps = JSON.parse(localStorage.getItem('mealpreps') || '[]');
+
+            const portionsUtilisees = {};
+            Object.values(planning).forEach(jour => {
+                ['dejeuner', 'diner'].forEach(repasKey => {
+                    const repasPlanifie = jour[repasKey];
+                    if (repasPlanifie && repasPlanifie.type === 'mealprep') {
+                        portionsUtilisees[repasPlanifie.id] = (portionsUtilisees[repasPlanifie.id] || 0) + 1;
+                    }
+                });
+            });
+
+            if (Object.keys(portionsUtilisees).length > 0) {
+                for (const mealprepId in portionsUtilisees) {
+                    const mealprep = mealpreps.find(mp => mp.id == mealprepId);
+                    if (mealprep) {
+                        mealprep.portions -= portionsUtilisees[mealprepId];
+                    }
+                }
+                mealpreps = mealpreps.filter(mp => mp.portions > 0);
+                localStorage.setItem('mealpreps', JSON.stringify(mealpreps));
+            }
+            
+            localStorage.removeItem('planningMenu');
+            localStorage.setItem('lastResetMonday', currentMonday.toISOString());
+
+            alert("Bonne semaine ! Le planning de la semaine passée a été finalisé et les portions consommées ont été déduites.");
+        }
     }
 
     chargerToutesLesDonnees() {
