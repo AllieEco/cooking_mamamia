@@ -6,6 +6,7 @@ class MealPrepManager {
         this.mealpreps = [];
         this.listeCourses = [];
         this.ingredientsRecetteCourante = [];
+        this.editingMealPrepId = null; // Pour suivre l'état d'édition
         this.init();
     }
 
@@ -62,13 +63,11 @@ class MealPrepManager {
     // --- GESTION DU FORMULAIRE ---
 
     setupEventListeners() {
-        document.getElementById('form-recette').addEventListener('submit', (e) => this.creerMealPrep(e));
+        document.getElementById('form-recette').addEventListener('submit', (e) => this.gererSoumissionRecette(e));
         
-        // Logique pour basculer entre les formulaires d'ingrédients
         document.getElementById('btn-passer-a-autre').addEventListener('click', () => this.toggleFormIngredient(true));
         document.getElementById('btn-retour-placard').addEventListener('click', () => this.toggleFormIngredient(false));
 
-        // Logique d'ajout depuis les deux formulaires
         document.getElementById('btn-ajouter-ingredient-placard').addEventListener('click', () => this.ajouterIngredientRecette(true));
         document.getElementById('btn-ajouter-autre-ingredient').addEventListener('click', () => this.ajouterIngredientRecette(false));
 
@@ -111,26 +110,19 @@ class MealPrepManager {
             const quantite = parseFloat(quantiteInput.value);
 
             if (!nom) {
-                this.afficherFeedback('Veuillez sélectionner un ingrédient.', 'error');
-                return;
+                this.afficherFeedback('Veuillez sélectionner un ingrédient.', 'error'); return;
             }
             if (isNaN(quantite) || quantite <= 0) {
-                this.afficherFeedback('Veuillez entrer une quantité valide.', 'error');
-                return;
+                this.afficherFeedback('Veuillez entrer une quantité valide.', 'error'); return;
             }
 
             const ingredientPlacard = this.placard.find(p => p.nom === nom);
-            nouvelIngredient = {
-                nom: ingredientPlacard.nom,
-                quantite: quantite,
-                unite: ingredientPlacard.unite,
-            };
+            nouvelIngredient = { nom: ingredientPlacard.nom, quantite, unite: ingredientPlacard.unite };
             
             select.value = '';
             quantiteInput.value = '';
             document.getElementById('unite-affichee').textContent = '';
-
-        } else { // Ajout depuis le formulaire "Autre ingrédient"
+        } else {
             const nomInput = document.getElementById('autre-ingredient-nom');
             const quantiteInput = document.getElementById('autre-ingredient-quantite');
             const uniteInput = document.getElementById('autre-ingredient-unite');
@@ -140,14 +132,11 @@ class MealPrepManager {
             const unite = uniteInput.value.trim();
 
             if (!nom || isNaN(quantite) || quantite <= 0 || !unite) {
-                this.afficherFeedback('Veuillez remplir tous les champs pour le nouvel ingrédient.', 'error');
-                return;
+                this.afficherFeedback('Veuillez remplir tous les champs.', 'error'); return;
             }
             
-            const estDansPlacard = this.placard.some(p => p.nom.toLowerCase() === nom.toLowerCase());
-            if (estDansPlacard) {
-                this.afficherFeedback(`"${nom}" est déjà dans votre placard. Utilisez le menu déroulant.`, 'warning');
-                return;
+            if (this.placard.some(p => p.nom.toLowerCase() === nom.toLowerCase())) {
+                this.afficherFeedback(`"${nom}" est déjà dans le placard. Utilisez le menu.`, 'warning'); return;
             }
 
             nouvelIngredient = { nom, quantite, unite };
@@ -184,14 +173,12 @@ class MealPrepManager {
             let html = `<span>${ing.nom} - ${ing.quantite} ${ing.unite}</span>`;
             
             const estInsuffisant = status.insuffisants.find(i => i.nom === ing.nom);
-            const estManquant = !this.placard.some(p => p.nom === ing.nom);
+            const estManquant = !this.placard.some(p => p.nom.toLowerCase() === ing.nom.toLowerCase());
 
             if (estManquant) {
-                div.classList.add('ingredient-manquant');
-                html += ` <small>(Manquant)</small>`;
+                div.classList.add('ingredient-manquant'); html += ` <small>(Manquant)</small>`;
             } else if (estInsuffisant) {
-                div.classList.add('ingredient-insuffisant');
-                html += ` <small>(Manque ${estInsuffisant.manquant} ${ing.unite})</small>`;
+                div.classList.add('ingredient-insuffisant'); html += ` <small>(Manque ${estInsuffisant.manquant} ${ing.unite})</small>`;
             } else {
                  div.classList.add('ingredient-disponible');
             }
@@ -202,15 +189,23 @@ class MealPrepManager {
         });
     }
 
-    // --- CRÉATION DU MEAL PREP & MISE À JOUR ---
+    // --- GESTION CRÉATION / MISE À JOUR ---
 
-    creerMealPrep(e) {
+    gererSoumissionRecette(e) {
         e.preventDefault();
+        if (this.editingMealPrepId) {
+            this.mettreAJourMealPrep();
+        } else {
+            this.creerMealPrep();
+        }
+    }
+
+    creerMealPrep() {
         const nomRecette = document.getElementById('nom-recette').value.trim();
         const nbPortions = parseInt(document.getElementById('nb-portions').value);
 
         if (!nomRecette || !nbPortions || this.ingredientsRecetteCourante.length === 0) {
-            this.showMessage('Veuillez remplir le nom, le nombre de portions et ajouter au moins un ingrédient.', 'error');
+            this.showMessage('Veuillez remplir le nom, les portions et ajouter au moins un ingrédient.', 'error');
             return;
         }
 
@@ -221,9 +216,7 @@ class MealPrepManager {
         status.manquants.forEach(ing => this.ajouterAListeCourses(ing));
 
         const nouveauMealPrep = {
-            id: Date.now(),
-            nom: nomRecette,
-            portions: nbPortions,
+            id: Date.now(), nom: nomRecette, portions: nbPortions,
             ingredients: this.ingredientsRecetteCourante,
             dateCreation: new Date().toISOString().split('T')[0]
         };
@@ -235,51 +228,129 @@ class MealPrepManager {
         
         let message = `Meal prep "${nomRecette}" créé !`;
         const ajoutsCourses = status.insuffisants.length + status.manquants.length;
-        if (ajoutsCourses > 0) {
-            message += ` ${ajoutsCourses} ingrédient(s) ajouté(s) à votre liste de courses.`;
-        }
+        if (ajoutsCourses > 0) message += ` ${ajoutsCourses} ingrédient(s) ajouté(s) à votre liste de courses.`;
         this.showMessage(message, 'success');
     }
     
-    supprimerMealPrep(id) {
-        this.mealpreps = this.mealpreps.filter(m => m.id !== id);
-        this.sauvegarderMealpreps();
-        this.afficherMealpreps();
-        this.showMessage('Meal prep supprimé.', 'success');
-    }
+    mettreAJourMealPrep() {
+        const nomRecette = document.getElementById('nom-recette').value.trim();
+        const nbPortions = parseInt(document.getElementById('nb-portions').value);
+        if (!nomRecette || !nbPortions || this.ingredientsRecetteCourante.length === 0) {
+            this.showMessage('Veuillez remplir tous les champs.', 'error'); return;
+        }
 
-    mettreAJourPlacard(ingredientsUtilises) {
-        ingredientsUtilises.forEach(ingUtilise => {
-            const indexPlacard = this.placard.findIndex(p => p.nom === ingUtilise.nom);
-            if (indexPlacard > -1) {
-                this.placard[indexPlacard].quantite -= ingUtilise.quantite;
-                if (this.placard[indexPlacard].quantite <= 0) {
-                    this.placard.splice(indexPlacard, 1);
-                }
-            }
-        });
+        const mealPrepOriginal = this.mealpreps.find(m => m.id === this.editingMealPrepId);
+        const ingredientsDiff = this.calculerDiffIngredients(mealPrepOriginal.ingredients, this.ingredientsRecetteCourante);
+        
+        const ingredientsRequis = ingredientsDiff.filter(i => i.diff > 0).map(i => ({nom: i.nom, quantite: i.diff, unite: i.unite}));
+        const status = this.verifierDisponibiliteIngredients(ingredientsRequis);
+        
+        let messageAjouts = '';
+        if (status.manquants.length > 0 || status.insuffisants.length > 0) {
+            status.manquants.forEach(ing => this.ajouterAListeCourses(ing));
+            status.insuffisants.forEach(ing => this.ajouterAListeCourses({nom: ing.nom, quantite: ing.manquant, unite: ing.unite}));
+            const ajouts = status.manquants.length + status.insuffisants.length;
+            messageAjouts = `${ajouts} ingrédient(s) ajouté(s) à la liste de courses.`;
+        }
+
+        this.appliquerDiffAuPlacard(ingredientsDiff);
+
+        const index = this.mealpreps.findIndex(m => m.id === this.editingMealPrepId);
+        this.mealpreps[index] = { ...mealPrepOriginal, nom: nomRecette, portions: nbPortions, ingredients: this.ingredientsRecetteCourante };
+
+        this.sauvegarderMealpreps();
         this.sauvegarderPlacard();
         this.peuplerSelectIngredients();
+        this.afficherMealpreps();
+        this.showMessage(`Meal prep "${nomRecette}" mis à jour ! ${messageAjouts}`, 'success');
+        this.annulerEdition();
     }
     
-    verifierDisponibiliteIngredients(ingredientsRecette) {
-        const manquants = [];
-        const insuffisants = [];
+    supprimerMealPrep(id) {
+        if (confirm("Êtes-vous sûr de vouloir supprimer ce meal prep ? Les ingrédients ne seront PAS retournés au placard.")) {
+            this.mealpreps = this.mealpreps.filter(m => m.id !== id);
+            this.sauvegarderMealpreps();
+            this.afficherMealpreps();
+            this.showMessage('Meal prep supprimé.', 'success');
+        }
+    }
+
+    // --- LOGIQUE D'ÉDITION ---
+    
+    commencerEdition(id) {
+        const mealPrepAEditer = this.mealpreps.find(m => m.id === id);
+        if (!mealPrepAEditer) return;
+
+        this.editingMealPrepId = id;
+        document.getElementById('nom-recette').value = mealPrepAEditer.nom;
+        document.getElementById('nb-portions').value = mealPrepAEditer.portions;
+        this.ingredientsRecetteCourante = JSON.parse(JSON.stringify(mealPrepAEditer.ingredients));
+        this.afficherIngredientsRecette();
+
+        document.querySelector('#form-recette .btn-primary').textContent = 'Mettre à jour le meal prep';
         
+        let cancelButton = document.getElementById('btn-annuler-edition');
+        if (!cancelButton) {
+            cancelButton = document.createElement('button');
+            cancelButton.type = 'button';
+            cancelButton.id = 'btn-annuler-edition';
+            cancelButton.textContent = 'Annuler';
+            cancelButton.className = 'btn-secondary-outline';
+            cancelButton.onclick = () => this.annulerEdition();
+            document.querySelector('#form-recette').appendChild(cancelButton);
+        }
+        
+        document.getElementById('form-recette').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    annulerEdition() {
+        this.editingMealPrepId = null;
+        this.resetFormulaire();
+    }
+
+    // --- LOGIQUE DE CALCUL & MISE À JOUR PLACARD ---
+
+    calculerDiffIngredients(originaux, nouveaux) {
+        const map = new Map();
+        originaux.forEach(ing => map.set(ing.nom, { quantite: -ing.quantite, unite: ing.unite }));
+        nouveaux.forEach(ing => {
+            if (map.has(ing.nom)) map.get(ing.nom).quantite += ing.quantite;
+            else map.set(ing.nom, { quantite: ing.quantite, unite: ing.unite });
+        });
+        const diffArray = [];
+        for (const [nom, data] of map.entries()) {
+            if (data.quantite !== 0) diffArray.push({ nom, diff: data.quantite, unite: data.unite });
+        }
+        return diffArray;
+    }
+    
+    appliquerDiffAuPlacard(ingredientsDiff) {
+        ingredientsDiff.forEach(diffItem => {
+            const indexPlacard = this.placard.findIndex(p => p.nom === diffItem.nom);
+            if (indexPlacard > -1) {
+                this.placard[indexPlacard].quantite -= diffItem.diff;
+                if (this.placard[indexPlacard].quantite <= 0) this.placard.splice(indexPlacard, 1);
+            } else if (diffItem.diff < 0) {
+                this.placard.push({ id: Date.now(), nom: diffItem.nom, quantite: -diffItem.diff, unite: diffItem.unite });
+            }
+        });
+    }
+    
+    mettreAJourPlacard(ingredientsUtilises) {
+        // Cette fonction ne sert plus que pour la création initiale
+        this.appliquerDiffAuPlacard(ingredientsUtilises.map(ing => ({...ing, diff: ing.quantite})));
+    }
+
+    verifierDisponibiliteIngredients(ingredientsRecette) {
+        const manquants = [], insuffisants = [];
         ingredientsRecette.forEach(ingRecette => {
             const ingPlacard = this.placard.find(p => p.nom.toLowerCase() === ingRecette.nom.toLowerCase());
-            
             if (!ingPlacard) {
                 manquants.push(ingRecette);
             } else if (ingPlacard.quantite < ingRecette.quantite) {
-                insuffisants.push({
-                    ...ingRecette,
-                    disponible: ingPlacard.quantite,
-                    manquant: ingRecette.quantite - ingPlacard.quantite
-                });
+                insuffisants.push({ ...ingRecette, disponible: ingPlacard.quantite, manquant: ingRecette.quantite - ingPlacard.quantite });
             }
         });
-        
         return { manquants, insuffisants };
     }
 
@@ -290,11 +361,7 @@ class MealPrepManager {
         if (indexCourses > -1) {
             this.listeCourses[indexCourses].quantite += ingredient.quantite;
         } else {
-            this.listeCourses.push({
-                ...ingredient,
-                origine: 'meal-prep',
-                dateAjout: new Date().toISOString().split('T')[0]
-            });
+            this.listeCourses.push({ ...ingredient, origine: 'meal-prep', dateAjout: new Date().toISOString().split('T')[0] });
         }
         this.sauvegarderListeCourses();
     }
@@ -307,8 +374,7 @@ class MealPrepManager {
         container.innerHTML = '';
         
         if (this.mealpreps.length === 0) {
-            emptyState.style.display = 'block';
-            return;
+            emptyState.style.display = 'block'; return;
         }
         emptyState.style.display = 'none';
 
@@ -318,14 +384,14 @@ class MealPrepManager {
             card.innerHTML = `
                 <div class="mealprep-header">
                     <h3>${meal.nom}</h3>
-                    <span class="portions">${meal.portions} portions</span>
-                    <button class="btn-supprimer" onclick="mealPrep.supprimerMealPrep(${meal.id})">&times;</button>
+                    <div class="actions">
+                         <button class="btn-editer" onclick="mealPrep.commencerEdition(${meal.id})">✏️</button>
+                         <button class="btn-supprimer" onclick="mealPrep.supprimerMealPrep(${meal.id})">&times;</button>
+                    </div>
                 </div>
                 <div class="ingredients-list">
                     ${meal.ingredients.map(ing => `
-                        <div class="ingredient-item">
-                            <span>${ing.nom} - ${ing.quantite} ${ing.unite}</span>
-                        </div>
+                        <div class="ingredient-item"><span>${ing.nom} - ${ing.quantite} ${ing.unite}</span></div>
                     `).join('')}
                 </div>
                 <div class="date-creation">Créé le ${new Date(meal.dateCreation).toLocaleDateString('fr-FR')}</div>
@@ -354,6 +420,9 @@ class MealPrepManager {
         document.getElementById('form-recette').reset();
         this.ingredientsRecetteCourante = [];
         this.afficherIngredientsRecette();
+        this.editingMealPrepId = null;
+        document.querySelector('#form-recette .btn-primary').textContent = 'Créer le meal prep';
+        document.getElementById('btn-annuler-edition')?.remove();
     }
 }
 

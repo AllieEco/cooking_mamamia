@@ -169,6 +169,30 @@
     font-size: 1.25rem;
 }
 
+.mealprep-header .actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.mealprep-header .btn-supprimer,
+.mealprep-header .btn-editer {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: var(--transition);
+    padding: 0.25rem;
+}
+
+.mealprep-header .btn-editer:hover {
+    color: var(--primary-color);
+}
+
+.mealprep-header .btn-supprimer:hover {
+    color: var(--error-color);
+}
+
 .mealprep-header .portions {
     background: var(--primary-color);
     color: white;
@@ -176,14 +200,6 @@
     border-radius: 99px;
     font-size: 0.8rem;
     font-weight: 500;
-}
-
-.mealprep-header .btn-supprimer {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--text-light);
-    cursor: pointer;
 }
 
 .mealprep-card .ingredients-list {
@@ -219,4 +235,12 @@
     margin-top: 0.5rem;
     padding: 0.5rem;
     border-radius: var(--border-radius);
+}
+
+#form-recette {
+    display: flex;
+    flex-direction: column;
+}
+#form-recette > button {
+    margin-top: 1rem;
 } 
