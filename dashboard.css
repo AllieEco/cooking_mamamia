@@ -1,0 +1,168 @@
+/* Styles spécifiques au Dashboard */
+
+/* Layout principal */
+.dashboard-main {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+@media (min-width: 1024px) {
+    .dashboard-main {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 2rem;
+    }
+    .widget-menu {
+        grid-column: span 2;
+    }
+}
+
+/* Styles des Widgets */
+.widget {
+    background: var(--white);
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.widget:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.widget-header {
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+}
+.widget-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+.btn-action {
+    background: rgba(255,255,255,0.2);
+    color: var(--primary-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid var(--primary-color);
+}
+
+.widget-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+}
+
+/* Navigation Principale (dans style.css ou ici si spécifique) */
+.nav-principale {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    background-color: var(--primary-color);
+    padding: 1rem;
+    box-shadow: var(--shadow);
+}
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    color: white;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+    border: 1px solid transparent;
+}
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+.nav-item.active {
+    background: var(--white);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+.badge {
+    background: var(--white);
+    color: var(--primary-color);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+/* Widget Menu Semaine */
+.menu-apercu-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+}
+.jour-apercu {
+    text-align: center;
+    font-size: 0.8rem;
+    background: var(--bg-color);
+    padding: 0.5rem;
+    border-radius: var(--border-radius);
+}
+.jour-apercu .jour-nom {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.repas-apercu-item.planifie .repas-nom {
+    font-weight: 600;
+    color: var(--success-color);
+}
+.repas-apercu-item.vide .repas-nom {
+    color: var(--text-light);
+    font-style: italic;
+}
+
+/* Widget Meal Prep */
+.mealprep-status .empty-list-message {
+    text-align: center;
+    color: var(--text-light);
+}
+
+/* Widget Courses */
+.courses-apercu .liste-vide {
+    text-align: center;
+    color: var(--text-light);
+    font-weight: 500;
+}
+.actions-courses {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+/* Widget Stats */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    text-align: center;
+}
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+.stat-label {
+    color: var(--text-light);
+    font-size: 0.9rem;
+} 

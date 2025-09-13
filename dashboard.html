@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Mon Placard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <header class="header">
+        <h1>🏠 Dashboard</h1>
+        <p>Vue d'ensemble de votre organisation alimentaire</p>
+    </header>
+
+    <nav class="nav-principale">
+        <a href="dashboard.html" class="nav-item active">
+            <span class="nav-icon">🏠</span> Dashboard
+        </a>
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">📦</span> Mon Placard
+            <span id="badge-placard" class="badge"></span>
+        </a>
+        <a href="mealprep.html" class="nav-item">
+            <span class="nav-icon">👨‍🍳</span> Meal Prep
+            <span id="badge-mealprep" class="badge"></span>
+        </a>
+        <a href="menu.html" class="nav-item">
+            <span class="nav-icon">📅</span> Menu Semaine
+            <span id="badge-menu" class="badge"></span>
+        </a>
+    </nav>
+
+    <main class="dashboard-main">
+        <section class="widget widget-menu">
+            <div class="widget-header">
+                <h2>📅 Menu de la Semaine</h2>
+                <a href="menu.html" class="btn-action">Modifier</a>
+            </div>
+            <div class="widget-content">
+                <div id="apercu-menu" class="menu-apercu">
+                    <!-- Planning généré automatiquement -->
+                </div>
+            </div>
+        </section>
+
+        <section class="widget widget-mealprep">
+            <div class="widget-header">
+                <h2>👨‍🍳 Statut Meal Prep</h2>
+                <a href="mealprep.html" class="btn-action">Gérer</a>
+            </div>
+            <div class="widget-content">
+                <div id="statut-mealprep" class="mealprep-status">
+                    <!-- Status des meal preps -->
+                </div>
+            </div>
+        </section>
+
+        <section class="widget widget-courses">
+            <div class="widget-header">
+                <h2>🛒 Liste de Courses</h2>
+                <span id="nb-articles" class="badge-count">0</span>
+            </div>
+            <div class="widget-content">
+                <div id="apercu-courses" class="courses-apercu">
+                    <!-- Liste courses générée automatiquement -->
+                </div>
+                <div class="actions-courses">
+                    <button id="btn-vider-courses" class="btn-secondary-outline">Vider la liste</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="widget widget-stats">
+            <div class="widget-header">
+                <h2>📊 Statistiques</h2>
+            </div>
+            <div class="widget-content">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="nb-ingredients">0</div>
+                        <div class="stat-label">Ingrédients en stock</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="nb-mealpreps">0</div>
+                        <div class="stat-label">Meal preps actifs</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="repas-planifies">0</div>
+                        <div class="stat-label">Repas planifiés</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="taux-planification">0%</div>
+                        <div class="stat-label">Semaine planifiée</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Mon Placard - Application de gestion d'inventaire alimentaire</p>
+    </footer>
+
+    <script src="dashboard.js"></script>
+</body>
+</html> 
