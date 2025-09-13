@@ -13,7 +13,8 @@
         grid-template-columns: repeat(2, 1fr);
         padding: 2rem;
     }
-    .widget-menu {
+    .widget-menu,
+    .widget-stats {
         grid-column: span 2;
     }
 }
@@ -61,50 +62,6 @@
     flex-grow: 1;
 }
 
-/* Navigation Principale (dans style.css ou ici si spécifique) */
-.nav-principale {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    background-color: var(--primary-color);
-    padding: 1rem;
-    box-shadow: var(--shadow);
-}
-.nav-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 0.5rem;
-    color: white;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    position: relative;
-    border: 1px solid transparent;
-}
-.nav-item:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-.nav-item.active {
-    background: var(--white);
-    color: var(--primary-color);
-    font-weight: 600;
-}
-.badge {
-    background: var(--white);
-    color: var(--primary-color);
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-}
-
 /* Widget Menu Semaine */
 .menu-apercu-grid {
     display: grid;
@@ -136,6 +93,16 @@
     text-align: center;
     color: var(--text-light);
 }
+.mealprep-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--bg-color);
+}
+.mealprep-item:last-child {
+    border-bottom: none;
+}
+
 
 /* Widget Courses */
 .courses-apercu .liste-vide {
@@ -149,6 +116,18 @@
     justify-content: flex-end;
     gap: 0.5rem;
 }
+.course-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+}
+.voir-plus {
+    text-align: center;
+    margin-top: 0.5rem;
+    color: var(--text-light);
+    font-style: italic;
+}
+
 
 /* Widget Stats */
 .stats-grid {

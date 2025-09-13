@@ -5,31 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Placard - Gestion d'Inventaire Alimentaire</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="dashboard.css">
     <link rel="stylesheet" href="mealprep.css">
 </head>
 <body>
-    <header class="header">
-        <h1>📦 Mon Placard</h1>
+    <header>
+        <h1>🍽️ Mon Placard</h1>
         <p>Gérez facilement votre inventaire alimentaire personnel</p>
     </header>
 
-    <nav class="nav-principale">
-        <a href="dashboard.html" class="nav-item">
-            <span class="nav-icon">🏠</span> Dashboard
-        </a>
-        <a href="index.html" class="nav-item active">
-            <span class="nav-icon">📦</span> Mon Placard
-            <span id="badge-placard" class="badge"></span>
-        </a>
-        <a href="mealprep.html" class="nav-item">
-            <span class="nav-icon">👨‍🍳</span> Meal Prep
-            <span id="badge-mealprep" class="badge"></span>
-        </a>
-        <a href="menu.html" class="nav-item">
-            <span class="nav-icon">📅</span> Menu Semaine
-            <span id="badge-menu" class="badge"></span>
-        </a>
+    <nav class="navigation">
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="index.html" class="active">🍽️ Mon Placard</a>
+        <a href="mealprep.html">🍲 Meal Prep</a>
+        <a href="menu.html">📅 Menu Semaine</a>
     </nav>
 
     <main>
@@ -100,6 +88,5 @@
     </footer>
 
     <script src="script.js"></script>
-    <script src="dashboard.js"></script>
 </body>
 </html>
