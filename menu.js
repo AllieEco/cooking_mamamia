@@ -111,7 +111,8 @@ class MenuManager {
         });
         
         // Bouton vider
-        document.getElementById('btn-vider-planning').addEventListener('click', this.viderPlanning.bind(this));
+        document.getElementById('btn-vider-planning').addEventListener('click', () => this.viderPlanning(true));
+        document.getElementById('btn-finaliser-semaine').addEventListener('click', this.finaliserSemaine.bind(this));
     }
 
     handleDragStart(e) {
@@ -203,8 +204,10 @@ class MenuManager {
         this.setupEventListeners();
     }
 
-    viderPlanning() {
-        if(confirm("Voulez-vous vraiment vider tout le planning ?")) {
+    viderPlanning(withConfirm = true) {
+        const confirmation = withConfirm ? confirm("Voulez-vous vraiment vider tout le planning ?") : true;
+        
+        if(confirmation) {
             this.jours.forEach(jour => {
                 this.planning[jour] = { dejeuner: null, diner: null };
             });
@@ -213,6 +216,42 @@ class MenuManager {
             this.chargerEtiquettesMealPrep();
             this.setupEventListeners();
         }
+    }
+
+    finaliserSemaine() {
+        const portionsUtilisees = this.calculerPortionsUtilisees();
+
+        if (Object.keys(portionsUtilisees).length === 0 && !Object.values(this.planning).some(j => j.dejeuner || j.diner)) {
+            alert("Le planning est déjà vide.");
+            return;
+        }
+
+        if (!confirm("Êtes-vous sûr de vouloir finaliser la semaine ?\n\nLes portions des meal preps utilisés seront définitivement consommées et le planning sera réinitialisé.")) {
+            return;
+        }
+
+        // 1. Charger la dernière version des meal preps
+        const currentMealpreps = JSON.parse(localStorage.getItem('mealpreps') || '[]');
+
+        // 2. Soustraire les portions utilisées
+        for (const mealprepId in portionsUtilisees) {
+            const mealprep = currentMealpreps.find(mp => mp.id == mealprepId);
+            if (mealprep) {
+                mealprep.portions -= portionsUtilisees[mealprepId];
+            }
+        }
+        
+        // 3. Filtrer pour ne garder que ceux avec des portions restantes
+        const updatedMealpreps = currentMealpreps.filter(mp => mp.portions > 0);
+        
+        // 4. Sauvegarder les meal preps mis à jour
+        localStorage.setItem('mealpreps', JSON.stringify(updatedMealpreps));
+        
+        // 5. Mettre à jour l'état interne et vider le planning
+        this.mealpreps = updatedMealpreps;
+        this.viderPlanning(false); // Vider sans confirmation
+
+        alert("La semaine est finalisée ! Les portions ont été consommées et le planning a été réinitialisé.");
     }
 
     calculerPortionsUtilisees() {
