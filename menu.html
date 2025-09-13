@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu de la Semaine - Mon Placard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mealprep.css">
+    <link rel="stylesheet" href="menu.css">
+</head>
+<body>
+    <header>
+        <h1>📅 Menu de la Semaine</h1>
+        <p>Organisez vos repas par glisser-déposer</p>
+    </header>
+
+    <nav class="navigation">
+        <a href="index.html">🍽️ Mon Placard</a>
+        <a href="mealprep.html">🍲 Meal Prep</a>
+        <a href="menu.html" class="active">📅 Menu Semaine</a>
+        <!-- <a href="courses.html">🛒 Liste Courses</a> -->
+    </nav>
+
+    <main class="page-layout">
+        <section class="planning-semaine">
+            <h2>Planning de la semaine</h2>
+            <div id="semaine-grid" class="semaine-grid">
+                <!-- Les jours de la semaine seront générés ici par JS -->
+            </div>
+        </section>
+
+        <section class="etiquettes-disponibles">
+            <h2>Étiquettes disponibles</h2>
+            
+            <div class="categorie-etiquettes">
+                <h3>Mes meal preps</h3>
+                <div id="etiquettes-mealprep" class="etiquettes-container">
+                    <!-- Les étiquettes de meal prep seront générées ici par JS -->
+                    <p class="empty-list-message">Aucun meal prep disponible. Créez-en un dans l'onglet "Meal Prep" !</p>
+                </div>
+            </div>
+            
+            <div class="categorie-etiquettes">
+                <h3>Autres options</h3>
+                <div id="etiquettes-autres" class="etiquettes-container">
+                    <div class="etiquette etiquette-autre" draggable="true" data-type="restaurant" data-nom="Restaurant">
+                        🍽️ Restaurant
+                    </div>
+                    <div class="etiquette etiquette-autre" draggable="true" data-type="cantine" data-nom="Cantine">
+                        🏢 Cantine
+                    </div>
+                    <div class="etiquette etiquette-autre" draggable="true" data-type="autre" data-nom="Autre">
+                        ❓ Autre
+                    </div>
+                </div>
+            </div>
+             <div class="actions-rapides">
+                <button id="btn-vider-planning" class="btn-secondary-outline">Vider le planning</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Mon Placard - Application de gestion d'inventaire alimentaire</p>
+    </footer>
+
+    <script src="menu.js"></script>
+</body>
+</html> 

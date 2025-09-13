@@ -1,0 +1,163 @@
+/* Styles spécifiques à la page Menu */
+
+.page-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Section des étiquettes */
+.etiquettes-disponibles {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+.categorie-etiquettes {
+    margin-bottom: 1.5rem;
+}
+.etiquettes-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+}
+
+/* Styles des étiquettes */
+.etiquette {
+    padding: 0.5rem 1rem;
+    border-radius: 99px;
+    cursor: grab;
+    transition: all 0.2s ease;
+    user-select: none;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+.etiquette-mealprep {
+    background: linear-gradient(135deg, var(--success-color), #059669);
+    color: white;
+}
+.etiquette-autre {
+    background: linear-gradient(135deg, #6366f1, #4338ca);
+    color: white;
+}
+
+/* États Drag & Drop */
+.etiquette.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+    transform: scale(1.05) rotate(3deg);
+    box-shadow: var(--shadow-lg);
+}
+.etiquette.epuise {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(80%);
+    background: var(--border-color);
+    color: var(--text-light);
+}
+
+/* Planning de la semaine */
+.semaine-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+.jour-container {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+.jour-titre {
+    padding: 1rem;
+    background-color: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+.repas-jour {
+    padding: 1rem;
+}
+.repas-slot {
+    margin-bottom: 1rem;
+}
+.repas-slot:last-child {
+    margin-bottom: 0;
+}
+.repas-slot label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-light);
+}
+
+/* Zone de dépôt */
+.drop-zone {
+    min-height: 50px;
+    border: 2px dashed var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 0.5rem;
+    text-align: center;
+    transition: all 0.2s ease;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
+}
+.drop-zone.drag-over {
+    border-color: var(--primary-color);
+    background-color: #fffbeb;
+    transform: scale(1.02);
+}
+.drop-zone.occupied {
+    border-style: solid;
+    border-color: var(--success-color);
+    background-color: #f0fdf4;
+    padding: 0;
+    font-style: normal;
+}
+
+/* Repas planifié dans la zone */
+.repas-planifie {
+    width: 100%;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.repas-planifie .nom-repas {
+    font-weight: 600;
+}
+.repas-planifie .btn-supprimer {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+.repas-planifie .btn-supprimer:hover {
+    color: var(--error-color);
+}
+.actions-rapides {
+    margin-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.5rem;
+}
+
+
+/* Responsive */
+@media (min-width: 1024px) {
+    .page-layout {
+        /* On conserve une disposition en colonne pour tous les écrans */
+    }
+    .semaine-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+@media (min-width: 1400px) {
+     .semaine-grid {
+        grid-template-columns: repeat(7, 1fr);
+    }
+} 
