@@ -82,7 +82,11 @@ class MealPrepManager {
     peuplerSelectIngredients() {
         const select = document.getElementById('select-ingredient');
         select.innerHTML = '<option value="">Choisir un ingrédient...</option>';
+        
+        const ingredientsDejaDansRecette = this.ingredientsRecetteCourante.map(i => i.nom);
+
         this.placard
+            .filter(ing => !ingredientsDejaDansRecette.includes(ing.nom)) // Ne pas montrer les ingrédients déjà ajoutés
             .sort((a, b) => a.nom.localeCompare(b.nom))
             .forEach(ing => {
                 const option = document.createElement('option');
@@ -148,11 +152,13 @@ class MealPrepManager {
 
         this.ingredientsRecetteCourante.push(nouvelIngredient);
         this.afficherIngredientsRecette();
+        this.peuplerSelectIngredients(); // Mettre à jour la liste déroulante
     }
     
     supprimerIngredientRecette(index) {
         this.ingredientsRecetteCourante.splice(index, 1);
         this.afficherIngredientsRecette();
+        this.peuplerSelectIngredients(); // Mettre à jour la liste déroulante
     }
 
     afficherIngredientsRecette() {
@@ -426,6 +432,7 @@ class MealPrepManager {
         document.getElementById('form-recette').reset();
         this.ingredientsRecetteCourante = [];
         this.afficherIngredientsRecette();
+        this.peuplerSelectIngredients(); // S'assurer que le select est plein au reset
         this.editingMealPrepId = null;
         document.querySelector('#form-recette .btn-primary').textContent = 'Créer le meal prep';
         document.getElementById('btn-annuler-edition')?.remove();
