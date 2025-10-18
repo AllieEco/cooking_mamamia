@@ -93,14 +93,18 @@ class DashboardManager {
         
         jours.forEach(jour => {
             const jourData = this.donnees.planningMenu[jour] || { dejeuner: null, diner: null };
+            
+            const dejeunerNom = jourData.dejeuner ? jourData.dejeuner.nom : '—';
+            const dinerNom = jourData.diner ? jourData.diner.nom : '—';
+
             html += `
                 <div class="jour-apercu">
                     <div class="jour-nom">${jour.charAt(0).toUpperCase() + jour.slice(1, 3)}</div>
                     <div class="repas-apercu-item ${jourData.dejeuner ? 'planifie' : 'vide'}">
-                        <span class="repas-nom">${jourData.dejeuner ? '✓' : '—'}</span>
+                        <span class="repas-nom">${dejeunerNom}</span>
                     </div>
                     <div class="repas-apercu-item ${jourData.diner ? 'planifie' : 'vide'}">
-                        <span class="repas-nom">${jourData.diner ? '✓' : '—'}</span>
+                        <span class="repas-nom">${dinerNom}</span>
                     </div>
                 </div>
             `;

@@ -88,6 +88,37 @@
     font-style: italic;
 }
 
+.repas-apercu-item {
+    padding: 0.5rem;
+    text-align: center;
+    border-radius: var(--border-radius);
+    background: #f8f9fa;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.repas-apercu-item.planifie {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+.repas-apercu-item .repas-nom {
+    font-size: 0.8rem;
+    white-space: normal;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.widget-mealprep, .widget-courses {
+    grid-column: span 1;
+}
+
 /* Widget Meal Prep */
 .mealprep-status .empty-list-message {
     text-align: center;
