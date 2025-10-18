@@ -278,11 +278,17 @@ class MealPrepManager {
     }
     
     supprimerMealPrep(id) {
-        if (confirm("Êtes-vous sûr de vouloir supprimer ce meal prep ? Les ingrédients ne seront PAS retournés au placard.")) {
+        if (confirm("Êtes-vous sûr de vouloir supprimer ce meal prep ? Les ingrédients utilisés seront retournés au placard.")) {
+            const mealPrepASupprimer = this.mealpreps.find(m => m.id === id);
+            
+            if (mealPrepASupprimer && mealPrepASupprimer.ingredients) {
+                this.retournerIngredientsAuPlacard(mealPrepASupprimer.ingredients);
+            }
+
             this.mealpreps = this.mealpreps.filter(m => m.id !== id);
             this.sauvegarderMealpreps();
             this.afficherMealpreps();
-            this.showMessage('Meal prep supprimé.', 'success');
+            this.showMessage('Meal prep supprimé et ingrédients retournés au placard.', 'success');
         }
     }
 
@@ -364,6 +370,25 @@ class MealPrepManager {
             }
         });
         return { manquants, insuffisants };
+    }
+
+    retournerIngredientsAuPlacard(ingredients) {
+        this.chargerDonneesPlacard();
+        ingredients.forEach(ingRetour => {
+            const ingPlacard = this.placard.find(p => p.nom.toLowerCase() === ingRetour.nom.toLowerCase() && p.unite === ingRetour.unite);
+            if (ingPlacard) {
+                ingPlacard.quantite += ingRetour.quantite;
+            } else {
+                this.placard.push({
+                    id: Date.now() + Math.random(), // Eviter les ID identiques
+                    nom: ingRetour.nom,
+                    quantite: ingRetour.quantite,
+                    unite: ingRetour.unite
+                });
+            }
+        });
+        this.sauvegarderPlacard();
+        this.peuplerSelectIngredients(); // Mettre à jour la liste pour qu'elle reflète les ajouts
     }
 
     // --- LISTE DE COURSES ---
