@@ -124,6 +124,12 @@ class MenuManager {
             zone.addEventListener('dragleave', this.handleDragLeave.bind(this));
             zone.addEventListener('drop', this.handleDrop.bind(this));
         });
+
+        // Pour la poubelle
+        const poubelle = document.getElementById('zone-poubelle');
+        poubelle.addEventListener('dragover', this.handleDragOverPoubelle.bind(this));
+        poubelle.addEventListener('dragleave', this.handleDragLeavePoubelle.bind(this));
+        poubelle.addEventListener('drop', this.handleDropPoubelle.bind(this));
         
         // Bouton vider
         document.getElementById('btn-vider-planning').addEventListener('click', () => this.viderPlanning(true));
@@ -139,10 +145,16 @@ class MenuManager {
             portions: e.target.dataset.portions
         };
         e.dataTransfer.setData('application/json', JSON.stringify(data));
+        
+        // Afficher la poubelle
+        document.getElementById('zone-poubelle').classList.add('visible');
     }
 
     handleDragEnd(e) {
         e.target.classList.remove('dragging');
+
+        // Cacher la poubelle
+        document.getElementById('zone-poubelle').classList.remove('visible', 'drag-over');
     }
 
     handleDragOver(e) {
@@ -158,6 +170,63 @@ class MenuManager {
         if (zone) zone.classList.remove('drag-over');
     }
 
+    handleDragOverPoubelle(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('drag-over');
+    }
+
+    handleDragLeavePoubelle(e) {
+        e.currentTarget.classList.remove('drag-over');
+    }
+
+    handleDropPoubelle(e) {
+        e.preventDefault();
+        const dataString = e.dataTransfer.getData('application/json');
+        
+        // Il se peut que l'on glisse un repas déjà planifié.
+        // Dans ce cas, il n'y a pas de dataTransfer, on cherche l'élément 'dragging'
+        if (!dataString) {
+            const draggedElement = document.querySelector('.repas-planifie.dragging');
+            if (draggedElement) {
+                const jour = draggedElement.parentElement.dataset.jour;
+                const repas = draggedElement.parentElement.dataset.repas;
+                this.supprimerRepas(jour, repas);
+                alert(`"${draggedElement.querySelector('.nom-repas').textContent}" a été jeté.`);
+            }
+            return;
+        }
+
+        const data = JSON.parse(dataString);
+        
+        // Si c'est un item non-mealprep, on ne fait rien de spécial à part confirmer.
+        if (data.type !== 'mealprep') {
+            alert(`"${data.nom}" a été jeté.`);
+            return;
+        }
+        
+        // Similaire à une finalisation, mais pour un seul repas.
+        const mealprep = this.mealpreps.find(mp => mp.id == data.id);
+            if (mealprep) {
+                mealprep.portions -= 1; // On déduit une portion car elle est gaspillée
+                 if (mealprep.portions < 0) mealprep.portions = 0;
+                
+                const allMealpreps = JSON.parse(localStorage.getItem('mealpreps') || '[]');
+                const index = allMealpreps.findIndex(mp => mp.id == data.id);
+                if (index > -1) {
+                    allMealpreps[index].portions -= 1;
+                    const updatedMealpreps = allMealpreps.filter(mp => mp.portions > 0);
+                    localStorage.setItem('mealpreps', JSON.stringify(updatedMealpreps));
+                }
+            }
+        // Retirer le repas du planning s'il y était
+        this.retirerRepasDuPlanning(data.id);
+        
+        this.chargerEtiquettesMealPrep();
+        this.setupEventListeners();
+
+        alert(`"${data.nom}" a été jeté.`);
+    }
+
     handleDrop(e) {
         e.preventDefault();
         const zone = e.target.closest('.drop-zone');
@@ -165,6 +234,13 @@ class MenuManager {
         
         zone.classList.remove('drag-over');
         const data = JSON.parse(e.dataTransfer.getData('application/json'));
+
+        // Si l'élément glissé vient d'une autre zone (et n'est pas une nouvelle étiquette)
+        const originJour = e.dataTransfer.getData('origin-jour');
+        const originRepas = e.dataTransfer.getData('origin-repas');
+        if (originJour && originRepas) {
+            this.planning[originJour][originRepas] = null;
+        }
         
         // Vérifier disponibilité si c'est un meal prep
         if (data.type === 'mealprep') {
@@ -199,11 +275,26 @@ class MenuManager {
 
                 if (data) {
                     zone.classList.add('occupied');
-                    zone.innerHTML = `
-                        <div class="repas-planifie">
-                            <span class="nom-repas">${data.nom}</span>
-                            <button class="btn-supprimer" onclick="menu.supprimerRepas('${jour}', '${repas}')">&times;</button>
-                        </div>`;
+                    const repasElement = document.createElement('div');
+                    repasElement.className = 'repas-planifie';
+                    repasElement.draggable = true;
+                    repasElement.innerHTML = `
+                        <span class="nom-repas">${data.nom}</span>
+                        <button class="btn-supprimer" onclick="menu.supprimerRepas('${jour}', '${repas}')">&times;</button>
+                    `;
+                    repasElement.addEventListener('dragstart', (e) => {
+                        e.target.classList.add('dragging');
+                        e.dataTransfer.setData('origin-jour', jour);
+                        e.dataTransfer.setData('origin-repas', repas);
+                        e.dataTransfer.setData('application/json', JSON.stringify(data));
+                        document.getElementById('zone-poubelle').classList.add('visible');
+                    });
+                    repasElement.addEventListener('dragend', (e) => {
+                        e.target.classList.remove('dragging');
+                        document.getElementById('zone-poubelle').classList.remove('visible', 'drag-over');
+                    });
+
+                    zone.appendChild(repasElement);
                 } else {
                     zone.innerHTML = 'Glissez un repas ici';
                 }
@@ -280,6 +371,23 @@ class MenuManager {
             });
         });
         return portionsUtilisees;
+    }
+
+    retirerRepasDuPlanning(mealId) {
+        let repasTrouve = false;
+        this.jours.forEach(jour => {
+            ['dejeuner', 'diner'].forEach(repas => {
+                const repasPlanifie = this.planning[jour][repas];
+                if (repasPlanifie && repasPlanifie.id == mealId) {
+                    this.planning[jour][repas] = null;
+                    repasTrouve = true;
+                }
+            });
+        });
+        if (repasTrouve) {
+            this.sauvegarderPlanning();
+            this.afficherPlanning();
+        }
     }
 }
 

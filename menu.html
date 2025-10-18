@@ -29,37 +29,44 @@
             </div>
         </section>
 
-        <section class="etiquettes-disponibles">
-            <h2>Étiquettes disponibles</h2>
-            
-            <div class="categorie-etiquettes">
-                <h3>Mes meal preps</h3>
-                <div id="etiquettes-mealprep" class="etiquettes-container">
-                    <!-- Les étiquettes de meal prep seront générées ici par JS -->
-                    <p class="empty-list-message">Aucun meal prep disponible. Créez-en un dans l'onglet "Meal Prep" !</p>
-                </div>
-            </div>
-            
-            <div class="categorie-etiquettes">
-                <h3>Autres options</h3>
-                <div id="etiquettes-autres" class="etiquettes-container">
-                    <div class="etiquette etiquette-autre" draggable="true" data-type="restaurant" data-nom="Restaurant">
-                        🍽️ Restaurant
-                    </div>
-                    <div class="etiquette etiquette-autre" draggable="true" data-type="cantine" data-nom="Cantine">
-                        🏢 Cantine
-                    </div>
-                    <div class="etiquette etiquette-autre" draggable="true" data-type="autre" data-nom="Autre">
-                        ❓ Autre
+        <aside class="sidebar">
+            <section class="etiquettes-disponibles">
+                <h2>Étiquettes disponibles</h2>
+                
+                <div class="categorie-etiquettes">
+                    <h3>Mes meal preps</h3>
+                    <div id="etiquettes-mealprep" class="etiquettes-container">
+                        <!-- Les étiquettes de meal prep seront générées ici par JS -->
+                        <p class="empty-list-message">Aucun meal prep disponible. Créez-en un dans l'onglet "Meal Prep" !</p>
                     </div>
                 </div>
-            </div>
-             <div class="actions-rapides">
-                <button id="btn-vider-planning" class="btn-secondary-outline">Vider le planning</button>
-                <button id="btn-finaliser-semaine" class="btn-primary">Fini ?</button>
-            </div>
-        </section>
+                
+                <div class="categorie-etiquettes">
+                    <h3>Autres options</h3>
+                    <div id="etiquettes-autres" class="etiquettes-container">
+                        <div class="etiquette etiquette-autre" draggable="true" data-type="restaurant" data-nom="Restaurant">
+                            🍽️ Restaurant
+                        </div>
+                        <div class="etiquette etiquette-autre" draggable="true" data-type="cantine" data-nom="Cantine">
+                            🏢 Cantine
+                        </div>
+                        <div class="etiquette etiquette-autre" draggable="true" data-type="autre" data-nom="Autre">
+                            ❓ Autre
+                        </div>
+                    </div>
+                </div>
+                 <div class="actions-rapides">
+                    <button id="btn-vider-planning" class="btn-secondary-outline">Vider le planning</button>
+                    <button id="btn-finaliser-semaine" class="btn-primary">Fini ?</button>
+                </div>
+            </section>
+        </aside>
     </main>
+
+    <div id="zone-poubelle" class="zone-poubelle">
+        <div class="poubelle-icone">🗑️</div>
+        <span>Jeter un repas</span>
+    </div>
 
     <footer>
         <p>&copy; 2024 Cooking Mama-mia - Application de gestion d'inventaire alimentaire</p>
