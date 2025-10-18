@@ -98,8 +98,16 @@ class MealPrepManager {
 
     afficherUniteIngredient(nomIngredient) {
         const uniteSpan = document.getElementById('unite-affichee');
+        const quantiteInput = document.getElementById('quantite-ingredient-placard');
         const ingredient = this.placard.find(p => p.nom === nomIngredient);
-        uniteSpan.textContent = ingredient ? ingredient.unite : '';
+        
+        if (ingredient) {
+            uniteSpan.textContent = ingredient.unite;
+            quantiteInput.value = ingredient.quantite;
+        } else {
+            uniteSpan.textContent = '';
+            quantiteInput.value = '';
+        }
     }
 
     // --- LOGIQUE DE LA RECETTE ---
