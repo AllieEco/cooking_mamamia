@@ -56,7 +56,20 @@
                     <!-- Liste courses générée automatiquement -->
                 </div>
                 <div class="actions-courses">
-                    <button id="btn-vider-courses" class="btn-secondary-outline">Vider la liste</button>
+                    <form id="form-ajout-course" class="form-ajout-course">
+                        <input type="text" id="nom-article" placeholder="Article" required>
+                        <input type="number" id="qte-article" placeholder="Qté" min="0.1" step="0.1">
+                        <select id="unite-article">
+                            <option value="pièce(s)">pièce(s)</option>
+                            <option value="grammes">grammes</option>
+                            <option value="kg">kg</option>
+                            <option value="litres">litres</option>
+                            <option value="mL">mL</option>
+                            <option value="cL">cL</option>
+                        </select>
+                        <button type="submit" class="btn-primary">+</button>
+                    </form>
+                    <button type="button" id="btn-vider-courses" class="btn-secondary-outline">Vider la liste</button>
                 </div>
             </div>
         </section>

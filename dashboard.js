@@ -80,6 +80,7 @@ class DashboardManager {
 
     setupEventListeners() {
         document.getElementById('btn-vider-courses').addEventListener('click', () => this.viderListeCourses());
+        document.getElementById('form-ajout-course').addEventListener('submit', (e) => this.ajouterArticleCourse(e));
         // Listen for storage changes from other tabs/windows
         window.addEventListener('storage', () => this.mettreAJourDashboard());
     }
@@ -146,10 +147,57 @@ class DashboardManager {
     }
 
     viderListeCourses() {
+        let listeCourses = JSON.parse(localStorage.getItem('listeCourses') || '[]');
+
+        if (listeCourses.length === 0) {
+            alert("Votre liste est déjà vide.");
+            return;
+        }
+
         if (confirm("Voulez-vous vraiment vider la liste de courses ?")) {
             localStorage.setItem('listeCourses', '[]');
             this.mettreAJourDashboard();
         }
+    }
+
+    ajouterArticleCourse(e) {
+        e.preventDefault();
+        const nomInput = document.getElementById('nom-article');
+        const qteInput = document.getElementById('qte-article');
+        const uniteInput = document.getElementById('unite-article');
+        
+        const nom = nomInput.value.trim();
+        const quantite = parseFloat(qteInput.value) || 1;
+        const unite = uniteInput.value.trim() || 'pièce(s)';
+
+        if (!nom) {
+            return;
+        }
+
+        const nouvelArticle = {
+            nom,
+            quantite,
+            unite,
+            origine: 'manuel',
+            dateAjout: new Date().toISOString().split('T')[0]
+        };
+
+        const listeCourses = JSON.parse(localStorage.getItem('listeCourses') || '[]');
+        
+        const indexExistant = listeCourses.findIndex(item => item.nom.toLowerCase() === nom.toLowerCase() && item.unite.toLowerCase() === unite.toLowerCase());
+        
+        if (indexExistant > -1) {
+            listeCourses[indexExistant].quantite += quantite;
+        } else {
+            listeCourses.push(nouvelArticle);
+        }
+
+        localStorage.setItem('listeCourses', JSON.stringify(listeCourses));
+        
+        nomInput.value = '';
+        qteInput.value = '';
+        uniteInput.value = '';
+        this.mettreAJourDashboard();
     }
 
     // --- WIDGET STATISTIQUES & BADGES ---
@@ -178,6 +226,7 @@ class DashboardManager {
     
     updateBadge(id, count) {
         const badge = document.getElementById(id);
+        if (!badge) return; // Correction pour éviter les erreurs si un badge n'existe pas
         if (count > 0) {
             badge.textContent = count;
             badge.style.display = 'flex';
